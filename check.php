@@ -5,9 +5,15 @@
     
     $products = array();
     for($i = 1; $i < 6; $i++){
-        $products[$i]["product_name"] = $_POST["product_name_".$i];
-        $products[$i]["product_price"] = $_POST["product_price_".$i];
-        $products[$i]["product_num"] = $_POST["product_num_".$i];
+        if($_POST["product_name_".$i]){
+            $products[$i]["product_name"] = $_POST["product_name_".$i];
+        }
+        if($_POST["product_price_".$i]){
+            $products[$i]["product_price"] = $_POST["product_price_".$i];
+        }
+        if($_POST["product_num_".$i]){
+            $products[$i]["product_num"] = $_POST["product_num_".$i];
+        }
     }
 
     // var_dump($products);
@@ -43,10 +49,11 @@
     <input type="hidden" name="address" value="<?php echo $address; ?>">
     <input type="hidden" name="name" value="<?php echo $name; ?>">
 
-    <?php for($i = 1; $i < 6; $i++){ ?>
+    <?php for($i = 1; $i <= count($products); $i++){ ?>
         <input type="hidden" name="<?php echo "product_name_".$i ?>" value="<?=htmlspecialchars($products[$i]["product_name"], ENT_COMPAT | ENT_HTML401, 'UTF-8')?>">
         <input type="hidden" name="<?php echo "product_price_".$i ?>" value="<?=htmlspecialchars($products[$i]["product_price"], ENT_COMPAT | ENT_HTML401, 'UTF-8')?>">
         <input type="hidden" name="<?php echo "product_num_".$i ?>" value="<?=htmlspecialchars($products[$i]["product_num"], ENT_COMPAT | ENT_HTML401, 'UTF-8')?>">
     <?php } ?>
+    <input type="hidden" name="products_num" value="<?php echo count($products); ?>">
     
 </form>

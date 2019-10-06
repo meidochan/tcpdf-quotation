@@ -38,20 +38,24 @@
     $customer_address = $_POST['address'];
     $customer_name = $_POST['name'];
 
-    $sum = 10000;
     // 送り元情報
     $post_number = "160-0023";
     $address = "東京都新宿区西新宿1-7-3";
     $tel = "03-3344-xxxx";
     $fax = "03-3344-xxxx";
 
-
     // 商品情報
+    $products_num = $_POST["products_num"];
     $products = array();
-    for($i = 1; $i < 6; $i++){
+    for($i = 1; $i <= $products_num; $i++){
         $products[$i]["product_name"] = $_POST["product_name_".$i];
         $products[$i]["product_price"] = $_POST["product_price_".$i];
         $products[$i]["product_num"] = $_POST["product_num_".$i];
+    }
+
+    $sub_total_money = 0;
+    foreach($products as $product){
+        $sub_total_money += $product["product_price"] * $product["product_num"];
     }
 
     /*
@@ -99,7 +103,7 @@
     // 合計金額
     $tcpdf->SetFont("kozminproregular", "", 10);
     $tcpdf->Cell(80,10,"合計金額",'B',0,"L",false,"",1,false,'T','B');
-    $tcpdf->Cell(0,10,number_format($sum)." 円",'B',0,"L",false,"",1,false,'T','B');
+    $tcpdf->Cell(0,10,number_format($sub_total_money * 1.08)." 円",'B',0,"L",false,"",1,false,'T','B');
 
     $tcpdf->ln();
     $tcpdf->ln(5);
@@ -117,8 +121,8 @@
     // $products[$i]["product_price"] = $_POST["product_price_".$i];
     // $products[$i]["product_num"] = $_POST["product_num_".$i];
 
-    for($i=1; $i < 6; $i++){
-        $tcpdf->Cell(100,10,$products[$i]["product_name"],1,0,"C",false,"",1,false,'T','C');
+    for($i = 1; $i <= $products_num; $i++){
+        $tcpdf->Cell(100,10,$products[$i]["product_name"],1,0,"L",false,"",1,false,'T','C');
         $tcpdf->Cell(20,10,$products[$i]["product_price"],1,0,"C",false,"",1,false,'T','C');
         $tcpdf->Cell(20,10,$products[$i]["product_num"],1,0,"C",false,"",1,false,'T','C');
         $price = $products[$i]["product_price"] * $products[$i]["product_num"];
@@ -132,14 +136,14 @@
      $tcpdf->SetTextColor(255);
     $tcpdf->Cell(30,10,"小計",1,0,"C",true,"",1,false,'T','C');
     $tcpdf->SetTextColor(0);
-    $tcpdf->Cell(60,10,number_format(10000),1,0,"C",false,"",1,false,'T','C');
+    $tcpdf->Cell(60,10,number_format($sub_total_money),1,0,"R",false,"",1,false,'T','C');
     $tcpdf->ln();
     // 消費税
     $tcpdf->Cell(90,10,"",0,0,"C",false,"",1,false,'T','C');
      $tcpdf->SetTextColor(255);
     $tcpdf->Cell(30,10,"消費税",1,0,"C",true,"",1,false,'T','C');
     $tcpdf->SetTextColor(0);
-    $tcpdf->Cell(60,10,number_format(10000),1,0,"C",false,"",1,false,'T','C');
+    $tcpdf->Cell(60,10,number_format($sub_total_money * 0.08),1,0,"R",false,"",1,false,'T','C');
     
     $tcpdf->ln();
     $tcpdf->ln(5);
